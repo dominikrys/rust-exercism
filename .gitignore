@@ -1,2 +1,5 @@
 */target
+*/.exercism
+
 *.lock
+**/*.rs.bk

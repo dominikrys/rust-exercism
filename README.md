@@ -1,6 +1,6 @@
 # Exercism Rust Exercises
 
-My solutions and notes on problems in the Exercism Rust track.
+Solutions and notes on problems in the [Exercism Rust track](https://exercism.io/my/tracks/rust).
 
 ## Useful commands
 
@@ -22,7 +22,7 @@ Run a specific test
 $ $ cargo test some_test
 ```
 
-To see, if your solution contains some common ineffective use cases, inside the solution directory use
+Check if the solution contains some common ineffective use cases
 
 ```bash
 $ cargo clippy --all-targets

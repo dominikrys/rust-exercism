@@ -1,5 +1,10 @@
+## Rust
 */target
-*/.exercism
-
 *.lock
 **/*.rs.bk
+
+## Exercism
+*/.exercism
+
+## Clion
+.idea

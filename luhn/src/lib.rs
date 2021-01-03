@@ -11,5 +11,5 @@ pub fn is_valid(code: &str) -> bool {
         }
     }
 
-    (length) > 1 && (sum % 10 == 0)
+    length > 1 && sum % 10 == 0
 }

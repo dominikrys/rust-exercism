@@ -1,40 +1,31 @@
 use std::collections::HashMap;
 
-pub fn get_letter_frequencies(input: &str) -> HashMap<char, usize> {
-    let mut freqs = HashMap::<char, usize>::new();
-    input.chars().for_each(|c| {
-        if c.is_alphabetic() {
-            *freqs.entry(c.to_ascii_lowercase()).or_insert(0) += 1;
-        }
-    });
+pub fn count_letters(strings: Vec<String>) -> HashMap<char, usize> {
+    println!("{:?}" , strings);
 
-    freqs
+    strings
+        .iter()
+        .flat_map(|s| s.chars().filter(|ch| ch.is_alphabetic()))
+        .fold(HashMap::new(), |mut acc, ch| {
+            *acc.entry(ch).or_insert(0) += 1;
+            acc
+        })
 }
 
 pub fn frequency(input: &[&str], worker_count: usize) -> HashMap<char, usize> {
-    let mut freqs = HashMap::<char, usize>::new();
-
-    let input = input.join("");
-    if input.is_empty() {
-        return freqs;
-    }
-
-    let mut thread_pool = Vec::with_capacity(worker_count);
-    let chunk_size = input.len() / worker_count + 1;
-
-    for _ in 0..worker_count {
-        let chunk = input.chars().by_ref().take(chunk_size).collect::<String>();
-
-        let thread = std::thread::spawn(move || get_letter_frequencies(&chunk));
-
-        thread_pool.push(thread);
-    }
-
-    for thread in thread_pool {
-        for (key, val) in thread.join().unwrap().iter() {
-            *freqs.entry(*key).or_insert(0) += val;
-        }
-    }
-
-    freqs
+    input
+        .chunks(input.len() / worker_count + 1)
+        .map(|chunk| {
+            chunk
+                .iter()
+                .map(|s| s.to_string().to_lowercase())
+                .collect::<Vec<String>>()
+        })
+        .map(|strings| std::thread::spawn(move || count_letters(strings)))
+        .map(|thread| thread.join().unwrap())
+        .flat_map(|freqs| freqs.into_iter())
+        .fold(HashMap::new(), |mut acc, (ch, freq)| {
+            *acc.entry(ch).or_insert(0) += freq;
+            acc
+        })
 }
